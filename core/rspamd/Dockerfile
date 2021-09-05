@@ -1,15 +1,15 @@
-ARG DISTRO=alpine:3.14
+ARG DISTRO=ubuntu:focal
 FROM $DISTRO
 # python3 shared with most images
-RUN apk add --no-cache \
-    python3 py3-pip git bash py3-multidict \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends tzdata ; \
+ apt-get install -y  python3 python3-pip git bash python3-multidict \
   && pip3 install --upgrade pip
 
 # Shared layer between nginx, dovecot, postfix, postgresql, rspamd, unbound, rainloop, roundcube
 RUN pip3 install socrate==0.2.0
 
 # Image specific layers under this line
-RUN apk add --no-cache rspamd rspamd-controller rspamd-proxy rspamd-fuzzy ca-certificates curl
+RUN apt-get install -y  rspamd  ca-certificates curl
 
 RUN mkdir /run/rspamd
 
